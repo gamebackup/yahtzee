@@ -1,0 +1,849 @@
+<yahtzee_game>
+<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yahtzee Game</title>
+</head>
+<body>
+<div class="container">
+<h1>Yahtzee</h1>
+<div class="player-info">
+<div class="player-name">
+<label for="player1">Player 1: </label>
+<input type="text" id="player1" value="Player 1">
+<span id="player1-turn" class="active-player">Current Turn</span>
+</div>
+<div class="player-name">
+<label for="player2">Player 2: </label>
+<input type="text" id="player2" value="Player 2">
+<span id="player2-turn" class="inactive-player">Waiting</span>
+</div>
+</div>
+<div class="game-area">
+<div class="dice-area">
+<h2>Dice</h2>
+<div class="dice-container">
+<div class="die" id="die1" data-index="0">
+<div class="die-face">1</div>
+</div>
+<div class="die" id="die2" data-index="1">
+<div class="die-face">1</div>
+</div>
+<div class="die" id="die3" data-index="2">
+<div class="die-face">1</div>
+</div>
+<div class="die" id="die4" data-index="3">
+<div class="die-face">1</div>
+</div>
+<div class="die" id="die5" data-index="4">
+<div class="die-face">1</div>
+</div>
+</div>
+<div class="game-controls">
+<button id="roll-button">Roll Dice</button>
+<span id="rolls-left">Rolls left: 3</span>
+</div>
+</div>
+<div class="scorecard-area">
+<h2>Scorecard</h2>
+<div class="scorecard-container">
+<table class="scorecard">
+<thead>
+<tr>
+<th>Category</th>
+<th>Player 1</th>
+<th>Player 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="section-header">
+<td colspan="3">Upper Section</td>
+</tr>
+<tr class="score-row" data-category="ones">
+<td>Aces (Ones)</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="twos">
+<td>Twos</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="threes">
+<td>Threes</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="fours">
+<td>Fours</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="fives">
+<td>Fives</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="sixes">
+<td>Sixes</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="total-row">
+<td>Upper Section Total</td>
+<td id="player1-upper-total">0</td>
+<td id="player2-upper-total">0</td>
+</tr>
+<tr class="bonus-row">
+<td>Bonus (score 63+ = 35)</td>
+<td id="player1-bonus">0</td>
+<td id="player2-bonus">0</td>
+</tr>
+<tr class="section-header">
+<td colspan="3">Lower Section</td>
+</tr>
+<tr class="score-row" data-category="three-kind">
+<td>Three of a Kind</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="four-kind">
+<td>Four of a Kind</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="full-house">
+<td>Full House</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="small-straight">
+<td>Small Straight</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="large-straight">
+<td>Large Straight</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="yahtzee">
+<td>Yahtzee</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="score-row" data-category="chance">
+<td>Chance</td>
+<td class="player1-score clickable"></td>
+<td class="player2-score clickable"></td>
+</tr>
+<tr class="yahtzee-bonus-row">
+<td>Yahtzee Bonus</td>
+<td id="player1-yahtzee-bonus">0</td>
+<td id="player2-yahtzee-bonus">0</td>
+</tr>
+<tr class="total-row">
+<td>Lower Section Total</td>
+<td id="player1-lower-total">0</td>
+<td id="player2-lower-total">0</td>
+</tr>
+<tr class="grand-total-row">
+<td>Grand Total</td>
+<td id="player1-grand-total">0</td>
+<td id="player2-grand-total">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="message-area" id="message-box">
+Game started! Player 1's turn. Roll the dice.
+</div>
+<button id="new-game-button">New Game</button>
+<div class="rules-toggle">
+<button id="rules-button">Show/Hide Rules</button>
+<div id="rules-section" class="hidden">
+<h3>Yahtzee Rules</h3>
+<p><strong>Objective:</strong> Achieve the highest score by rolling five dice to make specific combinations over 13 rounds.</p>
+<h4>Game Play:</h4>
+<ul>
+<li>On your turn, you may roll the dice up to three times.</li>
+<li>After the first roll, you can choose any dice to re-roll.</li>
+<li>After the second roll, you can again choose any dice to re-roll.</li>
+<li>After your final roll, you must choose a category to score in.</li>
+</ul>
+<h4>Upper Section Scoring:</h4>
+<ul>
+<li>Aces: Sum of all dice showing 1</li>
+<li>Twos: Sum of all dice showing 2</li>
+<li>Threes: Sum of all dice showing 3</li>
+<li>Fours: Sum of all dice showing 4</li>
+<li>Fives: Sum of all dice showing 5</li>
+<li>Sixes: Sum of all dice showing 6</li>
+<li>Bonus: If the total score in the upper section is 63 or more, an additional 35 points are awarded.</li>
+</ul>
+<h4>Lower Section Scoring:</h4>
+<ul>
+<li>Three of a Kind: At least three dice showing the same number; score is the total of all five dice.</li>
+<li>Four of a Kind: At least four dice showing the same number; score is the total of all five dice.</li>
+<li>Full House: Three of one number and two of another; scores 25 points.</li>
+<li>Small Straight: Four consecutive numbers; scores 30 points.</li>
+<li>Large Straight: Five consecutive numbers; scores 40 points.</li>
+<li>Yahtzee: All five dice showing the same number; scores 50 points.</li>
+<li>Chance: Any combination; score is the total of all five dice.</li>
+<li>Yahtzee Bonus: If a player rolls a second Yahtzee after already scoring 50 in the Yahtzee category, they receive a 100-point bonus.</li>
+</ul>
+<p><strong>Game End:</strong> The game concludes after 13 rounds when all players have filled in every category.</p>
+</div>
+</div>
+</div>
+</body>
+</html>
+</html>
+<style>
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: Arial, sans-serif;
+}
+body {
+background-color: #f5f5f5;
+padding: 20px;
+}
+.container {
+max-width: 1000px;
+margin: 0 auto;
+background-color: white;
+border-radius: 10px;
+padding: 20px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+text-align: center;
+color: #333;
+margin-bottom: 20px;
+font-size: 2.5em;
+}
+.player-info {
+display: flex;
+justify-content: space-around;
+margin-bottom: 20px;
+padding: 10px;
+background-color: #f0f0f0;
+border-radius: 5px;
+}
+.player-name {
+display: flex;
+align-items: center;
+}
+.player-name input {
+margin-left: 5px;
+padding: 5px;
+border: 1px solid #ccc;
+border-radius: 3px;
+}
+.active-player {
+margin-left: 10px;
+color: green;
+font-weight: bold;
+}
+.inactive-player {
+margin-left: 10px;
+color: #999;
+}
+.game-area {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+margin-bottom: 20px;
+}
+.dice-area {
+flex: 1;
+min-width: 300px;
+background-color: #e9f7ef;
+padding: 15px;
+border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.dice-container {
+display: flex;
+justify-content: space-around;
+margin: 20px 0;
+}
+.die {
+width: 50px;
+height: 50px;
+background-color: white;
+border: 2px solid #333;
+border-radius: 8px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 24px;
+font-weight: bold;
+cursor: pointer;
+transition: all 0.2s;
+}
+.die.held {
+background-color: #ffdddd;
+border-color: #ff5555;
+}
+.die:hover {
+transform: scale(1.05);
+}
+.game-controls {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+#roll-button {
+padding: 8px 16px;
+background-color: #4CAF50;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 16px;
+}
+#roll-button:hover {
+background-color: #45a049;
+}
+#roll-button:disabled {
+background-color: #cccccc;
+cursor: not-allowed;
+}
+#rolls-left {
+font-weight: bold;
+}
+.scorecard-area {
+flex: 2;
+min-width: 400px;
+background-color: #e6f2ff;
+padding: 15px;
+border-radius: 8px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.scorecard {
+width: 100%;
+border-collapse: collapse;
+}
+.scorecard th, .scorecard td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: center;
+}
+.scorecard th {
+background-color: #4285f4;
+color: white;
+}
+.scorecard tr:nth-child(even) {
+background-color: #f2f2f2;
+}
+.section-header {
+background-color: #e6e6e6;
+font-weight: bold;
+}
+.total-row, .grand-total-row, .bonus-row, .yahtzee-bonus-row {
+background-color: #ddd;
+font-weight: bold;
+}
+.grand-total-row {
+background-color: #b8daff;
+}
+.clickable {
+cursor: pointer;
+}
+.clickable:hover {
+background-color: #d1e7dd;
+}
+.clickable.active-cell {
+background-color: #a8d8ea;
+}
+.message-area {
+margin: 20px 0;
+padding: 10px;
+background-color: #f8f9fa;
+border-left: 5px solid #4285f4;
+border-radius: 4px;
+}
+#new-game-button {
+display: block;
+margin: 0 auto;
+padding: 10px 20px;
+background-color: #f44336;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 16px;
+}
+#new-game-button:hover {
+background-color: #d32f2f;
+}
+.rules-toggle {
+margin-top: 20px;
+}
+#rules-button {
+width: 100%;
+padding: 8px;
+background-color: #555;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+#rules-button:hover {
+background-color: #333;
+}
+#rules-section {
+margin-top: 10px;
+padding: 15px;
+background-color: #f9f9f9;
+border: 1px solid #ddd;
+border-radius: 4px;
+}
+#rules-section h3 {
+margin-bottom: 10px;
+}
+#rules-section h4 {
+margin: 15px 0 5px 0;
+}
+#rules-section ul {
+padding-left: 20px;
+}
+#rules-section li {
+margin-bottom: 5px;
+}
+.hidden {
+display: none;
+}
+@media (max-width: 768px) {
+.game-area {
+flex-direction: column;
+}
+.dice-area, .scorecard-area {
+min-width: 100%;
+}
+}
+</style>
+<script>
+// Game state variables
+let gameState = {
+currentPlayer: 1,
+rollsLeft: 3,
+round: 1,
+maxRounds: 13,
+dice: [1, 1, 1, 1, 1],
+heldDice: [false, false, false, false, false],
+scores: {
+player1: {
+ones: null,
+twos: null,
+threes: null,
+fours: null,
+fives: null,
+sixes: null,
+"three-kind": null,
+"four-kind": null,
+"full-house": null,
+"small-straight": null,
+"large-straight": null,
+yahtzee: null,
+chance: null,
+yahtzeeBonus: 0
+},
+player2: {
+ones: null,
+twos: null,
+threes: null,
+fours: null,
+fives: null,
+sixes: null,
+"three-kind": null,
+"four-kind": null,
+"full-house": null,
+"small-straight": null,
+"large-straight": null,
+yahtzee: null,
+chance: null,
+yahtzeeBonus: 0
+}
+},
+gameEnded: false
+};
+// DOM Elements
+const diceElements = document.querySelectorAll('.die');
+const rollButton = document.getElementById('roll-button');
+const rollsLeftSpan = document.getElementById('rolls-left');
+const messageBox = document.getElementById('message-box');
+const newGameButton = document.getElementById('new-game-button');
+const rulesButton = document.getElementById('rules-button');
+const rulesSection = document.getElementById('rules-section');
+const player1TurnIndicator = document.getElementById('player1-turn');
+const player2TurnIndicator = document.getElementById('player2-turn');
+// Initialize the game
+function initGame() {
+gameState = {
+currentPlayer: 1,
+rollsLeft: 3,
+round: 1,
+maxRounds: 13,
+dice: [1, 1, 1, 1, 1],
+heldDice: [false, false, false, false, false],
+scores: {
+player1: {
+ones: null,
+twos: null,
+threes: null,
+fours: null,
+fives: null,
+sixes: null,
+"three-kind": null,
+"four-kind": null,
+"full-house": null,
+"small-straight": null,
+"large-straight": null,
+yahtzee: null,
+chance: null,
+yahtzeeBonus: 0
+},
+player2: {
+ones: null,
+twos: null,
+threes: null,
+fours: null,
+fives: null,
+sixes: null,
+"three-kind": null,
+"four-kind": null,
+"full-house": null,
+"small-straight": null,
+"large-straight": null,
+yahtzee: null,
+chance: null,
+yahtzeeBonus: 0
+}
+},
+gameEnded: false
+};
+// Reset UI
+updateDiceDisplay();
+updateRollsLeftDisplay();
+updatePlayerTurnIndicator();
+updateScorecard();
+clearPotentialScores();
+// Reset dice holds
+diceElements.forEach(die => die.classList.remove('held'));
+// Enable roll button
+rollButton.disabled = false;
+// Update message
+showMessage(`Game started! Player ${gameState.currentPlayer}'s turn. Roll the dice.`);
+}
+// Roll the dice
+function rollDice() {
+if (gameState.rollsLeft <= 0 || gameState.gameEnded) return;
+// Roll only the dice that are not held
+for (let i = 0; i < gameState.dice.length; i++) {
+if (!gameState.heldDice[i]) {
+gameState.dice[i] = Math.floor(Math.random() * 6) + 1;
+}
+}
+// Update dice display
+updateDiceDisplay();
+// Decrease rolls left
+gameState.rollsLeft--;
+updateRollsLeftDisplay();
+// Show potential scores
+showPotentialScores();
+// Update message
+if (gameState.rollsLeft > 0) {
+showMessage(`Player ${gameState.currentPlayer}: You have ${gameState.rollsLeft} rolls left. Click dice to hold/release or roll again.`);
+} else {
+showMessage(`Player ${gameState.currentPlayer}: No rolls left. You must choose a category to score.`);
+}
+}
+// Update the visual display of dice
+function updateDiceDisplay() {
+for (let i = 0; i < gameState.dice.length; i++) {
+const dieValue = gameState.dice[i];
+const dieElement = diceElements[i].querySelector('.die-face');
+dieElement.textContent = dieValue;
+}
+}
+// Toggle holding a die
+function toggleHoldDie(index) {
+if (gameState.rollsLeft === 3 || gameState.rollsLeft <= 0 || gameState.gameEnded) return;
+gameState.heldDice[index] = !gameState.heldDice[index];
+diceElements[index].classList.toggle('held');
+}
+// Update the rolls left display
+function updateRollsLeftDisplay() {
+rollsLeftSpan.textContent = Rolls left: ${gameState.rollsLeft};
+// Disable roll button if no rolls left
+rollButton.disabled = gameState.rollsLeft <= 0 || gameState.gameEnded;
+}
+// Show message in the message box
+function showMessage(message) {
+messageBox.textContent = message;
+}
+// Calculate scores for each category based on current dice
+function calculatePotentialScores() {
+const dice = [...gameState.dice];
+const counts = [0, 0, 0, 0, 0, 0, 0]; // Index 0 not used, 1-6 for dice values
+// Count occurrences of each dice value
+for (const die of dice) {
+counts[die]++;
+}
+// Calculate sum of all dice
+const sum = dice.reduce((acc, val) => acc + val, 0);
+// Calculate potential scores for each category
+const scores = {
+ones: counts[1] * 1,
+twos: counts[2] * 2,
+threes: counts[3] * 3,
+fours: counts[4] * 4,
+fives: counts[5] * 5,
+sixes: counts[6] * 6,
+"three-kind": hasNOfAKind(counts, 3) ? sum : 0,
+"four-kind": hasNOfAKind(counts, 4) ? sum : 0,
+"full-house": hasFullHouse(counts) ? 25 : 0,
+"small-straight": hasSmallStraight(counts) ? 30 : 0,
+"large-straight": hasLargeStraight(counts) ? 40 : 0,
+yahtzee: hasNOfAKind(counts, 5) ? 50 : 0,
+chance: sum
+};
+return scores;
+}
+// Check if dice have N of a kind
+function hasNOfAKind(counts, n) {
+return counts.some(count => count >= n);
+}
+// Check if dice have a full house (3 of one number, 2 of another)
+function hasFullHouse(counts) {
+return counts.includes(3) && counts.includes(2);
+}
+// Check if dice have a small straight (4 consecutive numbers)
+function hasSmallStraight(counts) {
+return (
+(counts[1] >= 1 && counts[2] >= 1 && counts[3] >= 1 && counts[4] >= 1) ||
+(counts[2] >= 1 && counts[3] >= 1 && counts[4] >= 1 && counts[5] >= 1) ||
+(counts[3] >= 1 && counts[4] >= 1 && counts[5] >= 1 && counts[6] >= 1)
+);
+}
+// Check if dice have a large straight (5 consecutive numbers)
+function hasLargeStraight(counts) {
+return (
+(counts[1] === 1 && counts[2] === 1 && counts[3] === 1 && counts[4] === 1 && counts[5] === 1) ||
+(counts[2] === 1 && counts[3] === 1 && counts[4] === 1 && counts[5] === 1 && counts[6] === 1)
+);
+}
+// Show potential scores in the scorecard
+function showPotentialScores() {
+if (gameState.rollsLeft === 3) return;
+const potentialScores = calculatePotentialScores();
+const playerKey = player${gameState.currentPlayer};
+// Loop through each category and show potential score if not already scored
+Object.keys(potentialScores).forEach(category => {
+const score = potentialScores[category];
+const scoreCell = document.querySelector(`.score-row[data-category="${category}"] .${playerKey}-score`);
+if (gameState.scores[playerKey][category] === null) {
+scoreCell.textContent = score;
+scoreCell.classList.add('active-cell');
+}
+});
+}
+// Clear potential scores from the scorecard
+function clearPotentialScores() {
+const playerKey = player${gameState.currentPlayer};
+const scoreCells = document.querySelectorAll(`.${playerKey}-score`);
+scoreCells.forEach(cell => {
+if (cell.classList.contains('active-cell')) {
+cell.textContent = '';
+cell.classList.remove('active-cell');
+}
+});
+}
+// Score a category
+function scoreCategory(category) {
+if (gameState.gameEnded || gameState.rollsLeft === 3) return;
+const playerKey = player${gameState.currentPlayer};
+// Check if category has already been scored
+if (gameState.scores[playerKey][category] !== null) {
+showMessage(`This category has already been scored! Choose another.`);
+return;
+}
+// Calculate score for selected category
+const potentialScores = calculatePotentialScores();
+const score = potentialScores[category];
+// Store score
+gameState.scores[playerKey][category] = score;
+// Check for Yahtzee bonus
+if (category === 'yahtzee' && score === 50) {
+// If this is their first Yahtzee, note it for future Yahtzee bonuses
+} else if (potentialScores.yahtzee === 50 && gameState.scores[playerKey].yahtzee === 50) {
+// This is a bonus Yahtzee
+gameState.scores[playerKey].yahtzeeBonus += 100;
+showMessage(`Yahtzee Bonus! +100 points for Player ${gameState.currentPlayer}`);
+}
+// Update scorecard
+updateScorecard();
+// Clear potential scores
+clearPotentialScores();
+// Switch to next player or end game
+nextTurn();
+}
+// Update the scorecard with current scores
+function updateScorecard() {
+// Update individual category scores
+for (let player = 1; player <= 2; player++) {
+const playerKey = player${player};
+// Update each category score
+Object.keys(gameState.scores[playerKey]).forEach(category => {
+if (category !== 'yahtzeeBonus') {
+const scoreCell = document.querySelector(`.score-row[data-category="${category}"] .${playerKey}-score`);
+const score = gameState.scores[playerKey][category];
+if (score !== null) {
+scoreCell.textContent = score;
+scoreCell.classList.remove('clickable', 'active-cell');
+} else {
+scoreCell.textContent = '';
+scoreCell.classList.add('clickable');
+}
+}
+});
+// Update Yahtzee bonus
+document.getElementById(`${playerKey}-yahtzee-bonus`).textContent = gameState.scores[playerKey].yahtzeeBonus;
+// Calculate and update upper section
+const upperCategories = ['ones', 'twos', 'threes', 'fours', 'fives', 'sixes'];
+let upperTotal = 0;
+for (const category of upperCategories) {
+if (gameState.scores[playerKey][category] !== null) {
+upperTotal += gameState.scores[playerKey][category];
+}
+}
+document.getElementById(`${playerKey}-upper-total`).textContent = upperTotal;
+// Calculate and update bonus
+const bonus = upperTotal >= 63 ? 35 : 0;
+document.getElementById(`${playerKey}-bonus`).textContent = bonus;
+// Calculate and update lower section
+const lowerCategories = ['three-kind', 'four-kind', 'full-house', 'small-straight', 'large-straight', 'yahtzee', 'chance'];
+let lowerTotal = 0;
+for (const category of lowerCategories) {
+if (gameState.scores[playerKey][category] !== null) {
+lowerTotal += gameState.scores[playerKey][category];
+}
+}
+// Add Yahtzee bonus to lower total
+lowerTotal += gameState.scores[playerKey].yahtzeeBonus;
+document.getElementById(`${playerKey}-lower-total`).textContent = lowerTotal;
+// Calculate and update grand total
+const grandTotal = upperTotal + bonus + lowerTotal;
+document.getElementById(`${playerKey}-grand-total`).textContent = grandTotal;
+}
+}
+// Move to the next turn
+function nextTurn() {
+// Reset dice and held status
+gameState.dice = [1, 1, 1, 1, 1];
+gameState.heldDice = [false, false, false, false, false];
+diceElements.forEach(die => die.classList.remove('held'));
+// Reset rolls left
+gameState.rollsLeft = 3;
+updateRollsLeftDisplay();
+// Update dice display
+updateDiceDisplay();
+// Switch player
+gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+// Increment round if both players have taken their turn
+if (gameState.currentPlayer === 1) {
+gameState.round++;
+}
+// Check if game is over
+if (gameState.round > gameState.maxRounds) {
+endGame();
+return;
+}
+// Update player turn indicator
+updatePlayerTurnIndicator();
+// Show message for next player
+showMessage(`Player ${gameState.currentPlayer}'s turn. Roll the dice.`);
+}
+// Update the player turn indicator
+function updatePlayerTurnIndicator() {
+if (gameState.currentPlayer === 1) {
+player1TurnIndicator.className = 'active-player';
+player1TurnIndicator.textContent = 'Current Turn';
+player2TurnIndicator.className = 'inactive-player';
+player2TurnIndicator.textContent = 'Waiting';
+} else {
+player1TurnIndicator.className = 'inactive-player';
+player1TurnIndicator.textContent = 'Waiting';
+player2TurnIndicator.className = 'active-player';
+player2TurnIndicator.textContent = 'Current Turn';
+}
+}
+// End the game and show final results
+function endGame() {
+gameState.gameEnded = true;
+// Calculate final scores
+const player1Total = parseInt(document.getElementById('player1-grand-total').textContent);
+const player2Total = parseInt(document.getElementById('player2-grand-total').textContent);
+// Determine winner
+let winnerMessage;
+if (player1Total > player2Total) {
+winnerMessage = Game over! ${document.getElementById('player1').value} wins with ${player1Total} points vs ${player2Total} points!;
+} else if (player2Total > player1Total) {
+winnerMessage = Game over! ${document.getElementById('player2').value} wins with ${player2Total} points vs ${player1Total} points!;
+} else {
+winnerMessage = Game over! It's a tie with both players scoring ${player1Total} points!;
+}
+showMessage(winnerMessage);
+// Disable roll button
+rollButton.disabled = true;
+}
+// Event Listeners
+window.addEventListener('DOMContentLoaded', () => {
+// Initialize game on load
+initGame();
+// Roll button click event
+rollButton.addEventListener('click', rollDice);
+// New game button click event
+newGameButton.addEventListener('click', initGame);
+// Rules button click event
+rulesButton.addEventListener('click', () => {
+rulesSection.classList.toggle('hidden');
+});
+// Dice click events for holding/releasing
+diceElements.forEach(die => {
+die.addEventListener('click', () => {
+const index = parseInt(die.dataset.index);
+toggleHoldDie(index);
+});
+});
+// Scorecard cell click events
+document.querySelectorAll('.score-row').forEach(row => {
+const category = row.dataset.category;
+// Player 1 score cell
+const player1Cell = row.querySelector('.player1-score');
+player1Cell.addEventListener('click', () => {
+if (gameState.currentPlayer === 1 && player1Cell.classList.contains('active-cell')) {
+scoreCategory(category);
+}
+});
+// Player 2 score cell
+const player2Cell = row.querySelector('.player2-score');
+player2Cell.addEventListener('click', () => {
+if (gameState.currentPlayer === 2 && player2Cell.classList.contains('active-cell')) {
+scoreCategory(category);
+}
+});
+});
+});
+</script>
+</yahtzee_game>
+
