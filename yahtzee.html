@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Yahtzee Game</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Yahtzee Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Yahtzee</h1>
-    <div id="dice-container">
-        <!-- Dice will be rendered here -->
-    </div>
-    <button id="roll-btn">Roll Dice</button>
-    <p>Rerolls left: <span id="rerolls">3</span></p>
-    <div id="score-table">
-        <!-- Score table will be rendered here -->
-    </div>
-    <button id="reset-btn">New Game</button>
-    <script src="script.js"></script>
+  <h1>Yahtzee</h1>
+  <div id="dice-container">
+    <!-- Dice will be rendered here -->
+  </div>
+  <button id="roll-btn">Roll Dice (3 left)</button>
+  <h2>Scorecard</h2>
+  <table id="scorecard">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Score</th>
+        <th>Assign</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Score rows will go here -->
+    </tbody>
+  </table>
+  <h2 id="final-score"></h2>
+  <script src="script.js"></script>
 </body>
 </html>
