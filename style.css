@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #f8f8fc;
+}
+
+h1 {
+    margin-top: 20px;
+    color: #333;
+}
+
+#dice-container {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.die {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    user-select: none;
+}
+
+.die.held {
+    background: #ffe066;
+    box-shadow: 0 0 8px #e1be00;
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px #d3d3d3;
+}
+
+th, td {
+    padding: 8px 14px;
+    border: 1px solid #bbb;
+}
+
+.score-btn {
+    background: #d1f7d6;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.score-btn:disabled {
+    background: #f2f2f2;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+#roll-btn, #reset-btn {
+    margin: 10px;
+    padding: 12px 30px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    background: #4a90e2;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#roll-btn:disabled {
+    background: #ccc;
+    color: #888;
+    cursor: not-allowed;
+}
